@@ -1,4 +1,6 @@
-[gd_scene load_steps=3 format=3 uid="uid://cpo8cp83btn1h"]
+[gd_scene load_steps=4 format=3 uid="uid://cpo8cp83btn1h"]
+
+[ext_resource type="Script" path="res://clock.gd" id="1_6dopo"]
 
 [sub_resource type="Gradient" id="Gradient_ssnn0"]
 offsets = PackedFloat32Array(0.98, 1)
@@ -14,6 +16,7 @@ fill_to = Vector2(1, 0.5)
 
 [node name="Clock" type="Node2D"]
 position = Vector2(576, 324)
+script = ExtResource("1_6dopo")
 
 [node name="Face" type="Sprite2D" parent="."]
 texture = SubResource("GradientTexture2D_nm8ch")
@@ -87,7 +90,7 @@ position = Vector2(0, 8)
 color = Color(0, 0, 0.898039, 1)
 polygon = PackedVector2Array(0, -104, 8, -72, 8, 32, -8, 32, -8, -72)
 
-[node name="SecondArm2" type="Polygon2D" parent="."]
+[node name="SecondArm" type="Polygon2D" parent="."]
 position = Vector2(0, 8)
 color = Color(0.647059, 0, 0, 1)
 polygon = PackedVector2Array(0, -112, 8, -48, 8, 8, -8, 8, -8, -48)
