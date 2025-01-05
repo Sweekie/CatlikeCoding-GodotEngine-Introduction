@@ -1,4 +1,5 @@
-extends Node2D
+class_name Clock
+extends RigidBody2D
 
 
 #const SYSTEM_TIME := 0
@@ -20,27 +21,34 @@ enum StartTimeMode {
 @export_range(0, 59) var start_minute := 0
 @export_range(0, 59) var start_second := 0
 
-@onready var second_arm := $SecondArm as Polygon2D
-@onready var minute_arm := $MinuteArm as Polygon2D
-@onready var hour_arm := $HourArm as Polygon2D
+@export_group("Nodes")
+@export var collision_shape: CollisionShape2D
+@export var visualization: Node2D
+@export_subgroup("Arms")
+@export var second_arm: Node2D
+@export var minute_arm: Node2D
+@export var hour_arm: Node2D
+
 var seconds := 0.0
 
 func _ready() -> void:
 	if start_time == StartTimeMode.RANDOM_TIME:
 		seconds = randf_range(0.0, 43200.0)
-	elif start_time == StartTimeMode.SYSTEM_TIME:
-		var current_time := Time.get_time_dict_from_system()
-		seconds = float(
-			current_time.hour * 3600 + 
-			current_time.minute * 60 + 
-			current_time.second
-		)
 	else:
-		seconds += float(
-			start_hour * 3600 + 
-			start_minute * 60 + 
-			start_second
-		)
+		if start_time != StartTimeMode.FIXED_TIME:
+			var current_time := Time.get_time_dict_from_system()
+			seconds = float(
+				current_time.hour * 3600 + 
+				current_time.minute * 60 + 
+				current_time.second
+			)
+		if start_time != StartTimeMode.SYSTEM_TIME:
+			seconds += float(
+				start_hour * 3600 + 
+				start_minute * 60 + 
+				start_second
+			)
+	
 
 func _process(delta: float) -> void:
 	seconds += delta * time_scale
@@ -48,3 +56,9 @@ func _process(delta: float) -> void:
 	minute_arm.rotation = fmod(seconds / 60.0, 60) * TAU / 60.0
 	hour_arm.rotation = fmod(seconds / 3600.0, 12.0) * TAU / 12.0
 	
+func set_uniform_scale(scale_factor: float) -> void:
+	var scale_vector := Vector2(scale_factor, scale_factor)
+	
+	mass = scale_factor * scale_factor
+	collision_shape.scale = scale_vector
+	visualization.scale = scale_vector
